@@ -397,6 +397,12 @@ Baris atau aturan ketiga ini menolak (DROP) semua koneksi UDP yang mencoba masuk
 
 > Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
 
+Gunakan skrip berikut di DHCP server (Revolte) dan DNS server (Richter).
+
+```
+iptables -A INPUT -p icmp -m connlimit --connlimit-above 3 --connlimit-mask 0 -j DROP
+```
+
 ## No 4
 
 > Lakukan pembatasan sehingga koneksi SSH pada Web Server hanya dapat dilakukan oleh masyarakat yang berada pada GrobeForest.
