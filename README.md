@@ -8,7 +8,7 @@ NRP: 5025211137
 
 ## A. Topologi
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186732443798097960/image.png?ex=659451b7&is=6581dcb7&hm=efe4ca6c7384aa0536c7328443b572b299549ae742e96298efbf4a897752412b&)
 
 Richter adalah DNS Server
 
@@ -23,8 +23,6 @@ Jumlah Host pada LaubHills adalah 255
 Jumlah Host pada TurkRegion adalah 1022
 
 Jumlah Host pada GrobeForest adalah 512
-
-![image]()
 
 ## Konfigurasi
 
@@ -200,17 +198,17 @@ iface eth0 inet static
 
 ### Subnet
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186733197288034434/image.png?ex=6594526a&is=6581dd6a&hm=92f24adb5e308d8f8888ebb76675d5b126484d0113d240b01e32abee854d6680&)
 
 ### VLSM Tree
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186732685037674497/image.png?ex=659451f0&is=6581dcf0&hm=81a7fd2d33bdc701b6f2cbb96c4eb6a4610b31fafa52446f636b5463084dd86a&)
 
 ## Routing
 
 ### Tabel routing
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186733018749096046/image.png?ex=65945240&is=6581dd40&hm=1768fe6cdb3b11451b0bbdd5fccda60ad55b67c1b86ddb60fd3a4321876d7399&)
 
 ### Konfigurasi Routing
 
@@ -344,27 +342,27 @@ service isc-dhcp-relay start
 
 - Router ke router
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186733809979367535/image.png?ex=659452fc&is=6581ddfc&hm=d2a2d1988059734b12301dd9b4fc072318f8b9903cceb5926426f85d7c0b485a&)
 
 - Router ke server
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186734377112178779/image.png?ex=65945383&is=6581de83&hm=8e3cea935baf4e76bad9e241293195b0bdf0a2df18efae6dd4c67d0f0b86ffb4&)
 
 - Router ke client
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186734995180638310/image.png?ex=65945417&is=6581df17&hm=6a7e691b1160463bfb614565a7f957ac1fe76a3c535d3b66d944141480205a27&)
 
 - Server ke server
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186735361251098765/image.png?ex=6594546e&is=6581df6e&hm=14fd0edf86311570bdbe9bb13498ba27125dc8f3c900c13f25686b68a73ce523&)
 
 - Server ke client
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186735604168405094/image.png?ex=659454a8&is=6581dfa8&hm=f4615d43954ca79ec0f700278703b29e00fb2891c24a3e3f2de18bb2e8e11c19&)
 
 - Client ke client
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186735921824018542/image.png?ex=659454f4&is=6581dff4&hm=23ab5ef7336a2e677cf25d6cf02b0798b29b296222fa186e7cfe5761f812db31&)
 
 ## No 1
 
