@@ -370,24 +370,28 @@ service isc-dhcp-relay start
 
 > Agar topologi yang kalian buat dapat mengakses keluar, kalian diminta untuk mengkonfigurasi Aura menggunakan iptables, tetapi tidak ingin menggunakan MASQUERADE.
 
-Di Aura, digunakan skrip ini untuk mendapatkan alamat IP dari interface eth0, kemudian mengkonfigurasi iptables untuk NAT. Baris kedua merupakan instruksi untuk melakukan Source Network Address Translation (SNAT) pada paket yang melewati interface keluar (outbound) eth0. SNAT digunakan untuk mengganti alamat IP sumber paket dengan alamat IP yang telah diambil dari interface eth0 tadi.
-
 ```
 ETH0_IP=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $ETH0_IP
 ```
 
+Di Aura, digunakan skrip ini untuk mendapatkan alamat IP dari interface eth0, kemudian mengkonfigurasi iptables untuk NAT. Baris kedua merupakan instruksi untuk melakukan Source Network Address Translation (SNAT) pada paket yang melewati interface keluar (outbound) eth0. SNAT digunakan untuk mengganti alamat IP sumber paket dengan alamat IP yang telah diambil dari interface eth0 tadi.
+
 ## No 2
 
 > Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
-
-Di LaubHills
 
 ```
 iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
 iptables -A INPUT -p tcp -j DROP
 iptables -A INPUT -p udp -j DROP
 ```
+
+Baris atau aturan pertama mengizinkan koneksi yang masuk (INPUT) melalui protokol TCP ke port 8080. Artinya, jika ada koneksi yang datang ke sistem melalui TCP dan menuju port 8080, koneksi tersebut akan diizinkan.
+
+Baris atau aturan kedua menolak (DROP) semua koneksi TCP yang mencoba masuk ke sistem. Dengan kata lain, semua koneksi TCP, kecuali yang ditujukan ke port 8080 (seperti yang diizinkan pada aturan pertama), akan ditolak.
+
+Baris atau aturan ketiga ini menolak (DROP) semua koneksi UDP yang mencoba masuk ke sistem. Artinya, semua koneksi UDP yang mencoba masuk ke sistem akan ditolak.
 
 ## No 3
 
