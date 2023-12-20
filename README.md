@@ -533,28 +533,53 @@ iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.170.0.10 -j DNAT --to-de
 
 Berikut adalah hasil tes:
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1187045099964731512/image.png?ex=659574e6&is=6582ffe6&hm=0a37264746051728680389a988a26f0d8ee5a2cac519e9a4e57f76ac0c351072&)
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1187044824646438922/image.png?ex=659574a4&is=6582ffa4&hm=df577534fb28aca31c5d4576ad145c6028d72f8d3befc8dd5bec9bc50cbeacba&)
 
 ## No 8
 
 > Karena berbeda koalisi politik, maka subnet dengan masyarakat yang berada pada Revolte dilarang keras mengakses WebServer hingga masa pencoblosan pemilu kepala suku 2024 berakhir. Masa pemilu (hingga pemungutan dan penghitungan suara selesai) kepala suku bersamaan dengan masa pemilu Presiden dan Wakil Presiden Indonesia 2024.
 
+```
+iptables -A INPUT -p tcp --dport 80 -m time --datestart "2024-02-14T00:00" --datestop "2024-06-26T23:59" -s 192.170.0.20/30 -j DROP
+```
+
 Berikut adalah hasil tes:
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1187052803865194617/image.png?ex=65957c12&is=65830712&hm=8a278ded9274f1ffc16e1a7ee62f138d9f504f31c540e07038778970cc3e7cc5&)
 
 ## No 9
 
 > Sadar akan adanya potensial saling serang antar kubu politik, maka WebServer harus dapat secara otomatis memblokir  alamat IP yang melakukan scanning port dalam jumlah banyak (maksimal 20 scan port) di dalam selang waktu 10 menit. (clue: test dengan nmap)
 
+```
+iptables -N PORT_SCAN
+iptables -A INPUT -m recent --name PORT_SCAN --update --seconds 600 --hitcount 20 -j DROP
+iptables -A FORWARD -m recent --name PORT_SCAN --update --seconds 600 --hitcount 20 -j DROP
+iptables -A INPUT -m recent --name PORT_SCAN --set -j ACCEPT
+iptables -A FORWARD -m recent --name PORT_SCAN --set -j ACCEPT
+```
+
 Berikut adalah hasil tes:
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1187059112261984336/image.png?ex=659581f2&is=65830cf2&hm=f1eeb62580f49cd92e2ea7c53011e49cd96e9bc707a691491fe7416013e7e0ea&)
 
 ## No 10
 
 > Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level.
 
+```
+iptables -N LOGGING
+iptables -A INPUT -j LOGGING
+iptables -A OUTPUT -j LOGGING
+iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+iptables -A INPUT -j LOG --log-prefix "Dropped packet: " --log-level 4
+
+echo 'kern.warning	/var/log/iptables.log ' >> /etc/rsyslog.conf
+/etc/init.d/rsyslog restart
+```
+
 Berikut adalah hasil tes:
 
-![image]()
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1187059927122968687/image.png?ex=659582b5&is=65830db5&hm=ae7d324e229df59f31a3db04af2e724ada1201f15843ce9e4f61de166c5618f2&)
