@@ -435,6 +435,25 @@ Berikut adalah hasil tes:
 
 > Lakukan pembatasan sehingga koneksi SSH pada Web Server hanya dapat dilakukan oleh masyarakat yang berada pada GrobeForest.
 
+```
+iptables -A INPUT -p tcp --dport 22 -s 192.170.4.0/22 -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+```
+
+- iptables: Perintah untuk mengelola aturan firewall menggunakan iptables.
+
+- -A INPUT: Menambahkan aturan ke rantai INPUT, yang mengontrol paket yang masuk ke sistem.
+
+- -p tcp: Menentukan protokol paket, dalam hal ini TCP
+
+- --dport 22: Khusus untuk port 22, yang merupakan port standar untuk layanan SSH.
+
+- -s 192.170.4.0/22: Membatasi akses SSH hanya dari alamat IP yang termasuk dalam rentang 192.170.4.0 hingga 192.170.7.255.
+
+- -j ACCEPT: Menetapkan bahwa paket yang memenuhi syarat akan diterima.
+
+- -j DROP: Menunjukkan bahwa paket atau koneksi yang memenuhi syarat pada aturan tersebut akan ditolak (drop). 
+
 Berikut adalah hasil tes:
 
 ![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186999989038235699/image.png?ex=65954ae2&is=6582d5e2&hm=a0a654c5c9071f333ba7cddb8414989a86b9b6674c6b4c462d89a0c9d5ec2cfe&)
@@ -445,6 +464,21 @@ Berikut adalah hasil tes:
 
 > Selain itu, akses menuju WebServer hanya diperbolehkan saat jam kerja yaitu Senin-Jumat pada pukul 08.00-16.00.
 
+```
+iptables -A INPUT -p tcp --dport 22 -s 192.170.4.0/22 -m time --timestart 08:00 --timestop 16:00 --weekdays Mon, Tue,Wed,Thu,Fri -j ACCEPT
+```
+
+- -A INPUT: Menambahkan aturan ke rantai INPUT, yang mengontrol paket yang masuk ke sistem.
+
+- -p tcp: Menentukan protokol paket yang diizinkan, dalam hal ini TCP.
+
+- --dport 22: Menentukan port tujuan, dalam hal ini port 22 yang umumnya digunakan untuk layanan SSH.
+
+- -s 192.170.4.0/22: Mengizinkan koneksi hanya dari alamat IP dalam rentang 192.170.4.0 hingga 192.170.7.255.
+
+- -m time --timestart 08:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri: Menggunakan modul waktu untuk menetapkan batasan waktu. Aturan ini hanya berlaku pada hari Senin hingga Jumat, antara pukul 08:00 dan 16:00.
+
+- -j ACCEPT: Menetapkan tindakan yang akan diambil jika paket memenuhi syarat, yaitu diizinkan (ACCEPT).
 Berikut adalah hasil tes:
 
 ![image](https://cdn.discordapp.com/attachments/1186732405697028127/1187003257684492309/image.png?ex=65954dee&is=6582d8ee&hm=ea7e8b5792863f7495124528e2a95d4b3282702065852b66c59866c441c69453&)
@@ -452,6 +486,35 @@ Berikut adalah hasil tes:
 ## No 6
 
 > Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
+
+```
+iptables -A INPUT -p tcp --dport 22 -m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu -j DROP
+iptables -A INPUT -p tcp --dport 22 -m time --timestart 11:00 --timestop 13:00 --weekdays Fri -j DROP
+```
+
+#### Pertama: 
+
+- -A INPUT: Menambahkan aturan ke rantai INPUT.
+
+- -p tcp: Menggunakan protokol TCP.
+
+- --dport 22: Berlaku hanya untuk koneksi ke port 22 (SSH).
+
+- -m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu: Menerapkan batasan waktu, hanya berlaku pada hari Senin hingga Kamis antara pukul 12:00 dan 13:00.
+
+- -j DROP: Menolak (drop) semua koneksi SSH yang memenuhi syarat pada waktu tersebut.
+
+#### Kedua:
+
+- -A INPUT: Menambahkan aturan ke rantai INPUT.
+
+- -p tcp: Menggunakan protokol TCP.
+
+- --dport 22: Berlaku hanya untuk koneksi ke port 22 (SSH).
+
+- -m time --timestart 11:00 --timestop 13:00 --weekdays Fri: Menerapkan batasan waktu, hanya berlaku pada hari Jumat antara pukul 11:00 dan 13:00.
+
+- -j DROP: Menolak (drop) semua koneksi SSH yang memenuhi syarat pada waktu tersebut.
 
 Berikut adalah hasil tes:
 
