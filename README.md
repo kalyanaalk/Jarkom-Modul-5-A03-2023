@@ -375,6 +375,14 @@ iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $ETH0_IP
 
 Di Aura, digunakan skrip ini untuk mendapatkan alamat IP dari interface eth0, kemudian mengkonfigurasi iptables untuk NAT. Baris kedua merupakan instruksi untuk melakukan Source Network Address Translation (SNAT) pada paket yang melewati interface keluar (outbound) eth0. SNAT digunakan untuk mengganti alamat IP sumber paket dengan alamat IP yang telah diambil dari interface eth0 tadi.
 
+Berikut adalah hasil tes:
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186992317580709989/image.png?ex=659543bd&is=6582cebd&hm=fdda479865cea9b5c3029be1f89a1bad3c373ce144f226f94938d6fa1f7d8465&)
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186992542387028018/image.png?ex=659543f3&is=6582cef3&hm=37e2dd1ea2d903b9b4903eb9704bead68eb38e96df03a8788c99f979b802b4a9&)
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186994285632045076/image.png?ex=65954592&is=6582d092&hm=739ad7970cf0ca6c29c01ca83cf4a1dda17f89ebb8298da0c86f743f123aaa23&)
+
 ## No 2
 
 > Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
@@ -391,6 +399,10 @@ Baris atau aturan kedua menolak (DROP) semua koneksi TCP yang mencoba masuk ke s
 
 Baris atau aturan ketiga ini menolak (DROP) semua koneksi UDP yang mencoba masuk ke sistem. Artinya, semua koneksi UDP yang mencoba masuk ke sistem akan ditolak.
 
+Berikut adalah hasil tes:
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186997041482698772/image.png?ex=65954824&is=6582d324&hm=1711e528aa6856c825d031e359d2da5d5cbd0e277d40fbc6098790eb087c6b60&)
+
 ## No 3
 
 > Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
@@ -401,31 +413,85 @@ Gunakan skrip berikut di DHCP server (Revolte) dan DNS server (Richter).
 iptables -A INPUT -p icmp -m connlimit --connlimit-above 3 --connlimit-mask 0 -j DROP
 ```
 
+- iptables: Perintah untuk mengelola aturan firewall menggunakan iptables.
+
+- -A INPUT: Menambahkan aturan ke rantai INPUT, yang mengontrol paket yang masuk ke sistem.
+
+- -p icmp: Menentukan protokol paket, dalam hal ini ICMP (Internet Control Message Protocol), yang sering digunakan untuk pengiriman pesan kontrol dan kesalahan di jaringan.
+
+- -m connlimit: Menggunakan modul connlimit untuk menetapkan batasan koneksi.
+
+- --connlimit-above 3: Menetapkan batas di atas jumlah maksimum koneksi yang diizinkan. Dalam hal ini, jika jumlah koneksi melebihi 3, aturan akan diterapkan.
+
+- --connlimit-mask 0: Menerapkan batasan pada alamat IP sumber yang berbeda-beda. Dalam hal ini, setiap alamat IP dihitung secara terpisah tanpa mempertimbangkan alamat IP mana yang digunakan.
+
+- -j DROP: Menetapkan tindakan yang akan diambil jika batasan jumlah koneksi terlampaui, yaitu menolak (DROP) paket tersebut.
+
+Berikut adalah hasil tes:
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186998459501383691/image.png?ex=65954976&is=6582d476&hm=f8531c326de70bb9db017fead7fa2af86ea4f6130f068c8da9c3d65782effcf5&)
+
 ## No 4
 
 > Lakukan pembatasan sehingga koneksi SSH pada Web Server hanya dapat dilakukan oleh masyarakat yang berada pada GrobeForest.
+
+Berikut adalah hasil tes:
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1186999989038235699/image.png?ex=65954ae2&is=6582d5e2&hm=a0a654c5c9071f333ba7cddb8414989a86b9b6674c6b4c462d89a0c9d5ec2cfe&)
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1187000520162951299/image.png?ex=65954b61&is=6582d661&hm=277e05721136b2f4c2598b8a75b3c2209fe7cf5dc480ad25580b4c23d8aeb6e9&)
 
 ## No 5
 
 > Selain itu, akses menuju WebServer hanya diperbolehkan saat jam kerja yaitu Senin-Jumat pada pukul 08.00-16.00.
 
+Berikut adalah hasil tes:
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1187003257684492309/image.png?ex=65954dee&is=6582d8ee&hm=ea7e8b5792863f7495124528e2a95d4b3282702065852b66c59866c441c69453&)
+
 ## No 6
 
 > Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
+
+Berikut adalah hasil tes:
+
+![image](https://cdn.discordapp.com/attachments/1186732405697028127/1187005376990818344/image.png?ex=65954fe7&is=6582dae7&hm=d2f324532689d60d8cb7de73bc5ccbc7c7bd24b527036a745a27ee63a24ae93d&)
 
 ## No 7
 
 > Karena terdapat 2 WebServer, kalian diminta agar setiap client yang mengakses Sein dengan Port 80 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan dan request dari client yang mengakses Stark dengan port 443 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan.
 
+```
+iptables -A PREROUTING -t nat -p tcp --dport 80 -d 192.170.4.2 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 192.170.4.2
+iptables -A PREROUTING -t nat -p tcp --dport 80 -d 192.170.4.2 -j DNAT --to-destination 192.170.0.10
+iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.170.0.10 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 192.170.0.10
+iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.170.0.10 -j DNAT --to-destination 192.170.4.2
+```
+
+Berikut adalah hasil tes:
+
+![image]()
+
 ## No 8
 
 > Karena berbeda koalisi politik, maka subnet dengan masyarakat yang berada pada Revolte dilarang keras mengakses WebServer hingga masa pencoblosan pemilu kepala suku 2024 berakhir. Masa pemilu (hingga pemungutan dan penghitungan suara selesai) kepala suku bersamaan dengan masa pemilu Presiden dan Wakil Presiden Indonesia 2024.
 
+Berikut adalah hasil tes:
+
+![image]()
 
 ## No 9
 
 > Sadar akan adanya potensial saling serang antar kubu politik, maka WebServer harus dapat secara otomatis memblokir  alamat IP yang melakukan scanning port dalam jumlah banyak (maksimal 20 scan port) di dalam selang waktu 10 menit. (clue: test dengan nmap)
 
+Berikut adalah hasil tes:
+
+![image]()
+
 ## No 10
 
 > Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level.
+
+Berikut adalah hasil tes:
+
+![image]()
